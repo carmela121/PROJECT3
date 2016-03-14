@@ -5,6 +5,11 @@ var usersController = require('../controllers/users');
 // var secret = require('../config/tokens').secret;
 
 router.route('/users')
-  .get(usersController.index);
+  .get(usersController.index)
+
+router.route('/users/:id')
+  .get(usersController.show)
+
+
 
  module.exports = router;
