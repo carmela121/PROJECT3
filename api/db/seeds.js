@@ -33,5 +33,4 @@ User.create([{
   currentLocation:"Second Home",
   gender: "male",
   profilePic:"http://vignette4.wikia.nocookie.net/detectiveconan96/images/7/72/Generic_Male_Profile.jpg/revision/latest?cb=20140709000724"
-}
 }])
