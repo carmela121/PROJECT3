@@ -18,7 +18,6 @@ function register(req, res){
   });
 }
 
-
 function login(req, res) {
   User.findOne({ email: req.body.user.email }, function (err, user) {
 
