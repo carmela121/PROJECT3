@@ -1,7 +1,7 @@
 var router = require('express').Router();
 // var jwt = require('jsonwebtoken');
 var usersController = require('../controllers/users');
-// var authenticationController = require('../controllers/authentication');
+var authenticationController = require('../controllers/authentication');
 // var secret = require('../config/tokens').secret;
 
 router.route('/users')
@@ -9,6 +9,8 @@ router.route('/users')
 
 router.route('/users/:id')
   .get(usersController.show)
+
+router.post('/login', authenticationController.login)
 
 
 
