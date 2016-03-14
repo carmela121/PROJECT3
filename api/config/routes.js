@@ -5,9 +5,7 @@ var usersController = require('../controllers/users');
 // var secret = require('../config/tokens').secret;
 
 
-
 router.route('/users')
   .get(usersController.index);
 
- 
- module.exports = router; 
+ module.exports = router;
