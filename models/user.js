@@ -12,6 +12,14 @@ var userSchema = mongoose.Schema({
   profilePic:String
 })
 
+userSchema.set('toJSON', {
+ transform: function(doc, ret) {
+   delete ret.passwordHash;
+   delete ret.__v;
+   return ret;
+ }
+});
+
 // Create virtual property for password
 userSchema.virtual('password')
   .set(function(password) {

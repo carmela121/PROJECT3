@@ -21,7 +21,7 @@ function register(req, res){
 
 function login(req, res) {
   User.findOne({ email: req.body.user.email }, function (err, user) {
-    
+
     if(err) return res.send(500).json({message: err});
 
     if(!user || !user.validatePassword(req.body.user.password))
