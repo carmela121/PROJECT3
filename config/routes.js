@@ -1,16 +1,17 @@
 var router = require('express').Router();
-// var jwt = require('jsonwebtoken');
+var jwt = require('jsonwebtoken');
 var usersController = require('../controllers/users');
-var authenticationController = require('../controllers/authentication');
-// var secret = require('../config/tokens').secret;
+var authenticationController = require('../controllers/authentications');
+var secret = require('../config/tokens').secret;
 
 router.route('/users')
-  .get(usersController.index)
+  .get(usersController.index);
 
 router.route('/users/:id')
-  .get(usersController.show)
+  .get(usersController.show);
 
-router.post('/login', authenticationController.login)
+router.post('/register', authenticationController.register);
+router.post('/login', authenticationController.login);
 
 
 
