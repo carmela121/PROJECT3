@@ -2,7 +2,6 @@ var mongoose = require("mongoose");
 var User = require('../models/user');
 
 var databaseURL = 'mongodb://localhost:27017/project3';
-
 mongoose.connect(databaseURL);
 
 User.collection.drop();
@@ -10,7 +9,7 @@ User.collection.drop();
 User.create([{
   username: "TonyP",
   email: "tony@tony.com",
-  passwordHash: "password",
+  password: "password",
   dob:"01-01-01",
   prefferredZen: "Parks",
   currentLocation:"Second Home",
@@ -19,7 +18,7 @@ User.create([{
 },{
   username: "CamC",
   email: "carmen@carmen.com",
-  passwordHash: "password",
+  password: "password",
   dob:"02-02-02",
   prefferredZen: "Bars",
   currentLocation:"Second Home",
@@ -28,7 +27,7 @@ User.create([{
 }, {
   username: "JayJ",
   email: "Jay@json.com",
-  passwordHash: "password",
+  password: "password",
   dob:"03-03-03",
   prefferredZen: "Cafes",
   currentLocation:"Second Home",

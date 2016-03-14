@@ -2,9 +2,9 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 
 var userSchema = mongoose.Schema({
-  username: { type:String, unique:true, required: true} ,
+  username: {type:String, unique:true, required: true},
   email: {type: String, unique: true, required: true },
-  passwordHash: {type: String, unique:true, required: true },
+  passwordHash: {type: String, required: true },
   dob:Date,
   prefferredZen: String,
   currentLocation:String,
@@ -12,39 +12,36 @@ var userSchema = mongoose.Schema({
   profilePic:String
 })
 
-userSchema.set('toJSON', {
-  transform: function(doc, ret){
+// Create virtual property for password
+userSchema.virtual('password')
+  .set(function(password) {
+    //Save a reference to the password on the object for later
+    this._password = password;
+    // Encrypt password
+    this.passwordHash = bcrypt.hashSync(this._password, bcrypt.genSaltSync(8));
+  });
+
+// Make sure people can't mess with the user schema
+userSchema.path('passwordHash')
+  .validate(function(passwordHash) {
+    // Checks if _password exists
+    if(!this._password) {
+      return this.invalidate('password', 'Password Required!');
+    }
+  });
+
+// Create an instance method to validate Password
+// This takes the password entered, hashes it and compares it to the original hash
+userSchema.methods.validatePassword = function(password) {
+  return bcrypt.compareSync(password, this.passwordHash);
+}
+
+// Stop password hash from being sent from the server
+userSchema.set('toObject', {
+  transform: function(doc, ret) {
     delete ret.passwordHash;
-    delete ret.__v;
     return ret;
-  } 
+  }
 });
 
-userSchema.virtual('password')
-  .set(function(password){
-    this._password = password;
-    this.passwordHash = bcrypt.hashSync(this._password,
-      bcrypt.genSaltSync(8));
-  });
-
-userSchema.virtual('passwordConfirmation')
-  .set(function(passwordConfirmation){
-    this._passwordConfirmation = passwordConfirmation;
-  });
-
-userSchema.path('passwordHash')
-  .validate(function(passwordHash){
-    if(!this._password){
-      return this.invalidate('password', 'A password is required');
-    }
-    if(this._password !== this._passwordConfirmation){
-      return this.invalidate('passwordConfirmation', 'Passwords do not match');
-    }
-  });
-
-  userSchema.methods.validatePassword = function(password){
-    return bcrypt.compareSync(password, this.passwordHash);
-  }
-
 module.exports = mongoose.model('User', userSchema);
-
