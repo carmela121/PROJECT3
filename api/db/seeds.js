@@ -4,7 +4,7 @@ var User = require('../models/user');
 var databaseURL = 'mongo://localhost:8000/project3';
 mongoose.connect(databaseURL);
 
-User.collection.dop();
+User.collection.drop();
 
 User.create([{
   username: "TonyP"

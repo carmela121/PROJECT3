@@ -6,8 +6,8 @@ var port          = process.env.PORT || 3000;
 var mongoose      = require('mongoose');
 var bodyParser    = require('body-parser');
 var router        = require('./config/routes');
-var jwt           = require('jsonwebtoken');
-var secret        = require('./config/tokens').secret;
+// var jwt           = require('jsonwebtoken');
+// var secret        = require('./config/tokens').secret;
 
 mongoose.connect('mongodb://localhost/project3');
 
