@@ -45,13 +45,6 @@ userSchema.path('passwordHash')
   userSchema.methods.validatePassword = function(password){
     return bcrypt.compareSync(password, this.passwordHash);
   }
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> authenticationController
 module.exports = mongoose.model('User', userSchema);
-<<<<<<< HEAD
-=======
 
->>>>>>> dev
