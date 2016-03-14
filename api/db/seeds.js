@@ -33,9 +33,13 @@ User.create([{
   currentLocation:"Second Home",
   gender: "male",
   profilePic:"http://vignette4.wikia.nocookie.net/detectiveconan96/images/7/72/Generic_Male_Profile.jpg/revision/latest?cb=20140709000724"
+<<<<<<< HEAD
 }],
   function(err, users){
         if(err) return console.error(err);
         console.log(users);
         mongoose.connection.close();
       });
+=======
+}])
+>>>>>>> dev
