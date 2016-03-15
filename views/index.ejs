@@ -13,7 +13,7 @@
 </head>
 <body>
 
-  <main class="container">
+
 
   <header>
      <nav class="navbar navbar-default">
@@ -33,12 +33,14 @@
            <li><a href="#" class="register-link logged-out">Register</a></li>
            <li><a href="#" class="login-link logged-out">Login</a></li>
            <li><a href="#" class="users-link logged-in">Users</a></li>
+           <li><a href="#" class="map-link logged-in">Map</a></li>
            <li><a href="#" class="logout-link logged-in" id="logoutBtn">Logout</a></li>
          </ul>
        </div><!-- /.container-fluid -->
      </nav>
    </header>
 
+<main class="container">
 
   <section id="login">
     <% include partials/page/login %>
@@ -52,9 +54,10 @@
    <ul class="list-group users"></ul>
   </section>
 
-  <div id="map">
+  <!-- change this back to a section as currently a div and needs to be hidden using show page function on app.js -->
+  <section id="map">
     <% include partials/page/map %>
-  </div>
+  </section>
 
 </main>
 

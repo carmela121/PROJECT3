@@ -240,7 +240,7 @@ function initialize () {
 ]
       });
 
-            console.log(map);
+    console.log(map);
 
 
 
