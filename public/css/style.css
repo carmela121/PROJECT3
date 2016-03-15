@@ -1,7 +1,7 @@
 
 body {
     background-color: black;
-    background: url(../images/background.jpg) no-repeat center center fixe
+    background: url(../images/background.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -11,5 +11,16 @@ body {
 #map{
   height:500px;
   width: 800px;
+}
+
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 20px 40px 20px 20px;
+}
+
+
+#login, #register {
+  padding: 0px 400px;
 }
 
