@@ -14,6 +14,7 @@ mongoose.connect('mongodb://localhost/project3');
 app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
 app.set("view engine", "ejs");
