@@ -100,7 +100,7 @@ function displayUsers(data){
   $ul = $('ul.users');
     hideUsers($ul);
     data.users.forEach(function(user) {
-      $ul.append('<li class="list-group-item">' + user.username + user.gender + '</li>');
+      $ul.append('<li class="list-group-item">' + user.username + user.preferredZen + '</li>');
     });
 }
 
