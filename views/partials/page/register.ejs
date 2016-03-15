@@ -1,4 +1,4 @@
-<h1>Register</h1>
+
  <form class="register" method="post" action="/register">
   <fieldset class="form-group">
     <label for="username">Username</label>
@@ -25,14 +25,15 @@
     <input type="text" name="user[preferredZen]" class="form-control" placeholder="Preferred Zen">
   </fieldset>
   <fieldset class="form-group">
-      <label for="genderDropDown">Gender</label>
-      <select multiple class="form-control" id="exampleSelect1" name="user[Gender]">
-        <option>Male</option>
-        <option>Female</option>
-      </select>
-    </fieldset>
-    <label for="avatar"></label>
-    <input type="text" name="user[avatar]" class="form-control" placeholder="avatar">
+    <label>Gender</label>
+    <select class="form-control">
+      <option>Male</option>
+      <option>Female</option>
+    </select>
+  </fieldset>
+  <fieldset class="form-group">
+    <label>Image</label>
+    <input type="text" name="user[avatar]" class="form-control" placeholder="image URL">
   </fieldset>
 <button type="submit" class="btn btn-default">Submit</button>
 </form>
