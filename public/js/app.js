@@ -7,6 +7,9 @@ function init () {
   console.log("js loaded okay");
   $('ul li a').on('click', showPage);
   checkLoginState();
+
+  google.maps.event.addDomListener(window, 'load', initialize);
+
 }
 
 function checkLoginState(){
@@ -100,7 +103,7 @@ function displayUsers(data){
   $ul = $('ul.users');
     hideUsers($ul);
     data.users.forEach(function(user) {
-      $ul.append('<li class="list-group-item">' + user.username + user.gender + '</li>');
+      $ul.append('<li class="list-group-item">' + user.username + user.preferredZen + '</li>');
     });
 }
 
@@ -140,4 +143,132 @@ function ajaxRequest(method, url, data, callback) {
     console.error(err)
   });
 
+}
+
+
+
+
+function initialize () {
+
+    var center = new google.maps.LatLng(51.5152,-0.0722);
+
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: center,
+        zoom: 15,
+        // scrollwheel: false
+
+        styles:
+[
+    {
+        "featureType": "administrative",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#444444"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#f2f2f2"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "all",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 45
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#36b3a8"
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    }
+]
+      });
+
+            console.log(map);
+
+
+
+    var request = {
+      location:center,
+      radius:8047,
+      types:['parks']
+    }
+
+    var service = new google.maps.places.PlacesService(map);
+
+      service.nearbySearch(request, callback);
+}
+
+
+function callback (results, status){
+  if (status == google.maps.places.PlacesServiceStatus.OK){
+    for(var i=0; i<results.length; i++){
+      createMarker(results[i]);
+      console.log(results[i]);
+    }
+  }
+}
+
+function createMarker (place){
+  var placeLoc = place.geometry.location;
+  var marker = new google.maps.Marker({
+    map:map,
+    position: placeLoc
+  });
 }
