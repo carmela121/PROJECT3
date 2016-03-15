@@ -14,7 +14,6 @@ function register(req, res){
     }
       var token = jwt.sign(user, secret, "24h");
       return res.status(200).json({message: "thanks for registering", user: user, token: token});
-
   });
 }
 
@@ -31,7 +30,6 @@ function login(req, res) {
 
   });
 }
-
 
 module.exports = {
   login: login,
