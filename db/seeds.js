@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
 var User = require('../models/user');
 
-var databaseURL = 'mongodb://localhost:27017/project3';
-mongoose.connect(databaseURL);
+var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost/project3';
+mongoose.connect(mongoURI);
 
 User.collection.drop();
 
