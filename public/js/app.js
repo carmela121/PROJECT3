@@ -12,6 +12,8 @@ function init () {
 
 }
 
+
+
 function checkLoginState(){
 
   var token = getToken();
@@ -146,11 +148,23 @@ function ajaxRequest(method, url, data, callback) {
 }
 
 
-
+var center;
+var x ;
+var y;
 
 function initialize () {
 
-    var center = new google.maps.LatLng(51.5152,-0.0722);
+    var watchID = navigator.geolocation.watchPosition(function(position) {
+      // console.log(position.coords.latitude, position.coords.longitude);
+      x = position.coords.latitude;
+      y = position.coords.longitude
+      // var marker = new google.maps.Marker({
+      //                     position: x,y
+      //                   })
+        
+    // center = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    center = new google.maps.LatLng(x,y);
+
 
     map = new google.maps.Map(document.getElementById('map'), {
         center: center,
@@ -240,7 +254,7 @@ function initialize () {
 ]
       });
 
-    console.log(map);
+    // console.log(map);
 
 
 
@@ -253,6 +267,10 @@ function initialize () {
     var service = new google.maps.places.PlacesService(map);
 
       service.nearbySearch(request, callback);
+      map.getUiSettings().setMyLocationButtonEnabled(true);
+
+
+  });
 }
 
 
@@ -260,7 +278,7 @@ function callback (results, status){
   if (status == google.maps.places.PlacesServiceStatus.OK){
     for(var i=0; i<results.length; i++){
       createMarker(results[i]);
-      console.log(results[i]);
+      // console.log(results[i]);
     }
   }
 }
