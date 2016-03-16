@@ -28,14 +28,13 @@ router.route('/users/:id')
 
 router.route('/spots/:id')
   .get(spotsController.show)
-  .patch(spotsController.update)
+  .put(spotsController.update)
   .delete(spotsController.delete);
 
 router.post('/register', authenticationController.register);
 router.post('/login', authenticationController.login);
 
 router.post('/addspot', spotsController.create);
-
 router.get('/spots', spotsController.index);
 
 module.exports = router;

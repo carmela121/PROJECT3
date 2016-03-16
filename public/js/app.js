@@ -3,7 +3,7 @@ $(init);
 
 
 function init () {
-  $('form').on('submit', submitForm);
+  $('form:not(.updateSpot)').on('submit', submitForm);
   $('#logoutBtn').on('click', logout);
   console.log("js loaded okay");
   $('ul li a').on('click', showPage);
@@ -56,7 +56,6 @@ function submitForm(){
   var url = "/api" + $(this).attr('action');
   var data = $(this).serialize();
   $('section').addClass('hidden');
-  $('#')
 
   form.reset();
   ajaxRequest(method, url, data, authenticationSuccessful);
@@ -106,14 +105,35 @@ function deleteSpot(spot) {
   return ajaxRequest('DELETE', '/api/spots/' + spot._id);
 }
 
+// function populateAddSpotForm(spot) {
+//   event.preventDefault();
+
+//   var pos = new google.maps.LatLng({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+//   console.log(pos.lat(), pos.lng());
+
+//   var $form   = $('form.addSpot');
+//   $form.attr('lat');
+
+//   $form.find('input').toArray().forEach(function(input) {
+//     var $input = $(input);
+//     var attrLat = $input.attr('lat');
+//     $input.val(spot[attrLat]);
+//   });
+
 function populateSpotForm(spot) {
   event.preventDefault();
-  var $form = $('form.updateSpot');
+  var $form   = $('form.updateSpot');
+
+  $form.attr('id', spot._id);
+  $form.on('submit', updateSpot);
+
   $form.find('input').toArray().forEach(function(input) {
     var $input = $(input);
     var attrName = $input.attr('name').match(/spot\[(.+)\]/)[1];
     $input.val(spot[attrName]);
   });
+
+  $()
 }
 
 function displaySpots(data){
@@ -132,6 +152,7 @@ function displaySpots(data){
       });
       $update.on('click', function() {
         populateSpotForm(spot);
+        $()
       });
 
       $li.append($update);
@@ -140,8 +161,18 @@ function displaySpots(data){
     });
     $('.update').on('click', showUpdateForm);
 
+
 }
 
+function updateSpot() {
+  var id  = $(this).attr('id');
+  var url = '/api/spots/' + id;
+  var data = $(this).serialize();
+  console.log(data);
+  return ajaxRequest('PUT', url, data, checkLoginState);
+}
+
+// function latLngPopulate
 function hideSpots(ul){
   // remove all the users from the ul
     ul.empty();

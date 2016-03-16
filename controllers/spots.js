@@ -23,6 +23,7 @@ function spotsCreate(req, res){
   }
 
   function spotsUpdate (req, res) {
+    console.log(req.body);
     Spot.findByIdAndUpdate(req.params.id, req.body.spot, { new: true}, function(err, spot) {
       if(err) return res.status(500).json({ message: err });
       return res.status(200).json({ spot: spot });
