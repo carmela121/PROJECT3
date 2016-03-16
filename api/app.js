@@ -6,11 +6,12 @@ var port          = process.env.PORT || 3000;
 var mongoose      = require('mongoose');
 var bodyParser    = require('body-parser');
 var router        = require('./config/routes');
+var database      = require('./config/database');
 
 // var jwt           = require('jsonwebtoken');
 // var secret        = require('./config/tokens').secret;
 
-mongoose.connect('mongodb://localhost/project3');
+mongoose.connect(database.uri);
 
 app.use(cors());
 app.use(morgan('dev'));

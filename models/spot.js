@@ -1,12 +1,13 @@
 var mongoose = require('mongoose');
 
-var spotSchema = mongoose.Schema({
+var spotSchema = new mongoose.Schema({
   name: String,
   zenType: String,
-  location:String,
-  rating:String,
-  distanceToCurrentLocation: Number,
-  openHours: String
+  lat: Number,
+  lng: Number,
+  rating: Number,
+  placeId: String,
+  vicinity: String
 });
 
 module.exports = mongoose.model('Spot', spotSchema);
