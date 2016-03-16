@@ -1,6 +1,7 @@
 $(init);
 
 
+
 function init () {
   $('form').on('submit', submitForm);
   $('#logoutBtn').on('click', logout);
@@ -103,8 +104,10 @@ function displaySpots(data){
   $ul = $('ul.spots');
     hideSpots($ul);
     data.spots.forEach(function(spot) {
-      $ul.append('<li class="list-group-item">' + spot.name + spot.rating + spot.vicinity + '</li>');
+      $ul.append('<li class="list-group-item">' + spot.name + spot.rating + spot.vicinity + 
+      '<button type="submit" class="btn btn-default delete">Delete</button><button type="submit" class="update btn btn-default">Update</button></li>');
     });
+    $('.update').on('click', showUpdateForm);
 }
 
 function hideSpots(ul){
@@ -146,6 +149,13 @@ function hideUsers(ul){
 
   // remove all the users from the ul
     ul.empty();
+}
+
+
+function showUpdateForm(){
+  console.log("trying to show");
+  $('section').addClass('hidden');
+  $('#updateSpot').removeClass('hidden');
 }
 
 function ajaxRequest(method, url, data, callback) {
