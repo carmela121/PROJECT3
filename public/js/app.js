@@ -1,5 +1,7 @@
 $(init);
 
+var markers = [];
+var map;
 
 
 function init () {
@@ -8,7 +10,8 @@ function init () {
   console.log("js loaded okay");
   $('ul li a').on('click', showPage);
   checkLoginState();
-
+  
+  
   google.maps.event.addDomListener(window, 'load', initialize);
 
 }
@@ -25,7 +28,6 @@ function checkLoginState(){
         $('.logged-in').addClass('hidden')
         return loggedOutState();
       }
-
 }
 
 function showPage(){
@@ -37,11 +39,13 @@ function showPage(){
     $('section').addClass('hidden');
 
     var sectionId = $(this).text().toLowerCase();
-    console.log(sectionId);
+    // console.log(sectionId);
     if(sectionId === 'logout') {
       logout();
     } else {
-    $("#" + sectionId).removeClass('hidden');
+    $("#" + sectionId).removeClass('hidden')
+    // console.log(sectionId)
+
     }
 }
 
@@ -66,8 +70,9 @@ function loggedInState(){
   // show the users section and link
   // display the users
   $('#login, #register').addClass('hidden')
-  $('#users').removeClass('hidden');
-  getUsers();
+  // $('#users').removeClass('hidden');
+  $('#spots').removeClass('hidden');
+  // getUsers();
   getSpots();
 
 }
@@ -137,10 +142,12 @@ function populateSpotForm(spot) {
 }
 
 function displaySpots(data){
-  //take user data and display all users (as li's)
+  //take spot data and display all spots (as li's)
+  console.log(data);
   $ul = $('ul.spots');
     hideSpots($ul);
-    data.spots.forEach(function(spot) {
+
+    data.spots.forEach(function(spot, idx) {
       var $li = $('<li class="list-group-item">' + spot.name + spot.rating + spot.vicinity + 
       '</li>');
       var $update = $('<button type="submit" class="update btn btn-default">Update</button>');
@@ -159,7 +166,9 @@ function displaySpots(data){
       $li.append($delete);
       $ul.append($li);
     });
+
     $('.update').on('click', showUpdateForm);
+
 
 
 }
@@ -172,7 +181,24 @@ function updateSpot() {
   return ajaxRequest('PUT', url, data, checkLoginState);
 }
 
-// function latLngPopulate
+
+    
+    $('ul.spots li').on('click',function() {
+      var idx = $(this).index();
+      console.log(idx);
+      var marker = markers[idx];
+
+      if(!marker.getMap()) {
+        marker.setMap(map);
+      } else {
+        marker.setMap(null);
+      }
+    }); 
+
+}
+
+
+
 function hideSpots(ul){
   // remove all the users from the ul
     ul.empty();
@@ -199,7 +225,7 @@ function logout(){
 
     removeToken();
     checkLoginState();
-    console.log("loggedout")
+    console.log("loggedout");
 
 }
 
@@ -238,9 +264,6 @@ function ajaxRequest(method, url, data, callback) {
   });
 
 }
-
-
-var map;
 
 function initialize () {
 
@@ -334,20 +357,20 @@ function initialize () {
 ]
       });
 
-      var geocoder = new google.maps.Geocoder();
+      // var geocoder = new google.maps.Geocoder();
 
-      geocoder.geocode({ address: "The Emirates Stadium, London, UK" }, function(results) {
+      // geocoder.geocode({ address: "The Emirates Stadium, London, UK" }, function(results) {
 
-        var sillyMarker = new google.maps.Marker({
-          map:map,
-          position: results[0].geometry.location,
-        });
-      });
+      //   var sillyMarker = new google.maps.Marker({
+      //     map:map,
+      //     position: results[0].geometry.location,
+      //   });
+      // });
 
       navigator.geolocation.getCurrentPosition(function(pos) {
 
         var pos = new google.maps.LatLng({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-
+        console.log(pos.lat(), pos.lng());
         var currentMarker = new google.maps.Marker({
           map:map,
           position: pos,
@@ -385,7 +408,6 @@ function initialize () {
 //   }
 // }
 
-
 var currentInfoWindow;
 
   // Makes a request to /cameras, and logs the data returned
@@ -394,49 +416,28 @@ var currentInfoWindow;
     var spots = data.spots;
 
     spots.forEach(function(spot, idx) {
-      setTimeout(function() {
-        var marker = new google.maps.Marker({
-          position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
-          map: map,
-          animation: google.maps.Animation.DROP
-          // icon: "/images/marker.png"
-        });
+      var marker = new google.maps.Marker({
+        position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
+        visible: true
+        // icon: "/images/marker.png"
+      });
 
-        var infoWindow = new google.maps.InfoWindow({
-          position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
-          content: "<p>enter some text</p>"
-        });
+      var infoWindow = new google.maps.InfoWindow({
+        position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
+        content: spot.name
+      });
 
-        marker.addListener('click', function() {
-          // Remove one window when another is opened
-          if(currentInfoWindow) currentInfoWindow.close();
+      marker.addListener('click', function() {
+        // Remove one window when another is opened
+        if(currentInfoWindow) currentInfoWindow.close();
 
-          currentInfoWindow = infoWindow;
-          infoWindow.open(map);
-        });
+        currentInfoWindow = infoWindow;
+        infoWindow.open(map);
+      });
 
-
-      }, idx*25);
-
+      markers.push(marker);
     });
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function createMarker (place){
@@ -448,6 +449,8 @@ function createMarker (place){
     position: placeLoc
     // icon: iconBase + 'pharmacy_plus.png'
   });
+  markers.push(markers);
+  console.log(markers);
 }
 
 }

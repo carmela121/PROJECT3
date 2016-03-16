@@ -30,9 +30,9 @@
          <ul class="nav navbar-nav navbar-right">
            <li><a href="#" class="register-link logged-out">Register</a></li>
            <li><a href="#" class="login-link logged-out">Login</a></li>
-           <li><a href="#" class="users-link logged-in">Users</a></li>
            <li><a href="#" class="users-link logged-in">AddSpot</a></li>
-           <li><a href="#" class="map-link logged-in">Map</a></li>
+           <!-- <li><a href="#" class="users-link logged-in">UpdateSpot</a></li> -->
+           <!-- <li><a href="#" class="map-link logged-in">Map</a></li> -->
            <li><a href="#" class="logout-link logged-in">Logout</a></li>
         </ul>
        </div><!-- /.container-fluid -->
@@ -47,19 +47,17 @@
   <section id="register">
     <% include partials/page/register %>
   </section>
-
   <section id="addspot">
-    <h2>Add a spot</h2>
     <% include partials/page/addSpot %>
   </section>
 
-  <section id="updateSpot">
-    <h2>Update Spot</h2>
+  <section id="updatespot">
+   
     <% include partials/page/updatespot %>
   </section>
 
   <section id="users">
-   <h2>Users</h2>
+
    <ul class="list-group users"></ul>
   </section>
 
@@ -81,14 +79,6 @@
   </div>
 
 </div>
-
-
-
-
-
-
-
-
 
 
 </main>
