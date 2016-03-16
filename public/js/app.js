@@ -12,8 +12,6 @@ function init () {
 
 }
 
-
-
 function checkLoginState(){
 
   var token = getToken();
@@ -43,7 +41,6 @@ function showPage(){
     } else {
     $("#" + sectionId).removeClass('hidden');
     }
-
 }
 
 
@@ -105,7 +102,7 @@ function displayUsers(data){
   $ul = $('ul.users');
     hideUsers($ul);
     data.users.forEach(function(user) {
-      $ul.append('<li class="list-group-item">' + user.username + user.preferredZen + '</li>');
+      $ul.append('<li class="list-group-item">' + user.username + user.email + '</li>');
     });
 }
 
@@ -148,23 +145,11 @@ function ajaxRequest(method, url, data, callback) {
 }
 
 
-var center;
-var x ;
-var y;
+var map;
 
 function initialize () {
 
-    var watchID = navigator.geolocation.watchPosition(function(position) {
-      // console.log(position.coords.latitude, position.coords.longitude);
-      x = position.coords.latitude;
-      y = position.coords.longitude
-      // var marker = new google.maps.Marker({
-      //                     position: x,y
-      //                   })
-        
-    // center = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    center = new google.maps.LatLng(x,y);
-
+    var center = new google.maps.LatLng(51.5152,-0.0722);
 
     map = new google.maps.Map(document.getElementById('map'), {
         center: center,
@@ -254,9 +239,35 @@ function initialize () {
 ]
       });
 
+      var geocoder = new google.maps.Geocoder();
+
+      geocoder.geocode({ address: "The Emirates Stadium, London, UK" }, function(results) {
+
+        var sillyMarker = new google.maps.Marker({
+          map:map,
+          position: results[0].geometry.location,
+        });
+      });
+
+      navigator.geolocation.getCurrentPosition(function(pos) {
+
+        var pos = new google.maps.LatLng({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+
+        var currentMarker = new google.maps.Marker({
+          map:map,
+          position: pos,
+          draggable: true
+        });
+
+        currentMarker.addListener('dragend', function() {
+          geocoder.geocode({ location: currentMarker.getPosition() }, function(results) {
+            console.log(results[0].formatted_address);
+          });
+        });
+      });
+
+
     // console.log(map);
-
-
 
     var request = {
       location:center,
@@ -267,10 +278,6 @@ function initialize () {
     var service = new google.maps.places.PlacesService(map);
 
       service.nearbySearch(request, callback);
-      map.getUiSettings().setMyLocationButtonEnabled(true);
-
-
-  });
 }
 
 
@@ -278,15 +285,18 @@ function callback (results, status){
   if (status == google.maps.places.PlacesServiceStatus.OK){
     for(var i=0; i<results.length; i++){
       createMarker(results[i]);
-      // console.log(results[i]);
+      console.log(results[i].name);
     }
   }
 }
 
 function createMarker (place){
   var placeLoc = place.geometry.location;
+  // console.log(placeLoc);
+  var iconBase = "https://maps.google.com/mapfiles/kml/shapes/";
   var marker = new google.maps.Marker({
     map:map,
     position: placeLoc
+    // icon: iconBase + 'pharmacy_plus.png'
   });
 }

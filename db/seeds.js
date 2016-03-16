@@ -1,8 +1,53 @@
 var mongoose = require("mongoose");
 var User = require('../models/user');
 
+
+var Spot = require('../models/spot');
+var rp       = require("request-promise");
+// var parser   = require('xml2json');
+
+
 var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost/project3';
 mongoose.connect(mongoURI);
+
+//
+// exports.randeats = function(req, res){
+  // var key = req.query.key;
+  // var location = encodeURIComponent(req.query.location);
+  // var radius = 16000;
+  // var sensor = false;
+  // var types = "restaurant";
+  //
+  // // var https = require('https');
+  // var url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDPoIujIF8uLPDuTaJ32f-wW0EDd5hCfFg&location=" + location + "&radius=" + radius + "&sensor=" + sensor + "&types=" + types;
+  // console.log(url);
+//   https.get(url, function(response) {
+//       var body ='';
+//       response.on('data', function(chunk) {
+//         body += chunk;
+//       });
+//
+//       response.on('end', function() {
+//         var places = JSON.parse(body);
+//         var locations = places.results;
+//         var randLoc = locations[Math.floor(Math.random() * locations.length)];
+//
+//         res.json(randLoc);
+//       });
+//     }).on('error', function(e) {
+//       console.log("Got error: " + e.message);
+//     });
+//   };
+
+
+
+
+
+
+
+
+
+
 
 User.collection.drop();
 
