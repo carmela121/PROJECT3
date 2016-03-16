@@ -11,6 +11,7 @@ function init () {
   $('ul li a').on('click', showPage);
   checkLoginState();
   
+  
   google.maps.event.addDomListener(window, 'load', initialize);
 
 }
