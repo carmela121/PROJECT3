@@ -8,9 +8,9 @@ var bodyParser    = require('body-parser');
 var router        = require('./config/routes');
 var jwt           = require('jsonwebtoken');
 var secret        = require('./config/tokens').secret;
+var database      = require('./config/database');
 
-var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost/project3';
-mongoose.connect(mongoURI);
+mongoose.connect(database.uri);
 
 app.use(cors());
 app.use(morgan('dev'));
