@@ -24,7 +24,6 @@ function checkLoginState(){
         $('.logged-in').addClass('hidden')
         return loggedOutState();
       }
-
 }
 
 function showPage(){
@@ -36,11 +35,13 @@ function showPage(){
     $('section').addClass('hidden');
 
     var sectionId = $(this).text().toLowerCase();
-    console.log(sectionId);
+    // console.log(sectionId);
     if(sectionId === 'logout') {
       logout();
     } else {
-    $("#" + sectionId).removeClass('hidden');
+    $("#" + sectionId).removeClass('hidden')
+    // console.log(sectionId)
+
     }
 }
 
@@ -64,8 +65,9 @@ function loggedInState(){
   // show the users section and link
   // display the users
   $('#login, #register').addClass('hidden')
-  $('#users').removeClass('hidden');
-  getUsers();
+  // $('#users').removeClass('hidden');
+  $('#spots').removeClass('hidden');
+  // getUsers();
   getSpots();
 
 }
@@ -133,7 +135,7 @@ function logout(){
 
     removeToken();
     checkLoginState();
-    console.log("loggedout")
+    console.log("loggedout");
 
 }
 
@@ -273,7 +275,7 @@ function initialize () {
       navigator.geolocation.getCurrentPosition(function(pos) {
 
         var pos = new google.maps.LatLng({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-
+        console.log(pos.lat(), pos.lng());
         var currentMarker = new google.maps.Marker({
           map:map,
           position: pos,
