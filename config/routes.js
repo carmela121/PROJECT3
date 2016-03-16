@@ -26,6 +26,11 @@ router.route('/users')
 router.route('/users/:id')
   .get(usersController.show);
 
+router.route('/spots/:id')
+  .get(spotsController.show)
+  .patch(spotsController.update)
+  .delete(spotsController.delete);
+
 router.post('/register', authenticationController.register);
 router.post('/login', authenticationController.login);
 
