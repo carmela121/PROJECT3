@@ -7,21 +7,29 @@ function spotsIndex (req, res) {
   });
 }
 
-  function spotshow (req, res) {
+function spotsCreate(req, res){
+  Spot.create(req.body.spot, function(err,spot){
+    if(err) return res.status(500).send(err);
+    return res.status(200).json({message: "added to db"});
+   })
+}
+
+
+  function spotsShow (req, res) {
     Spot.findById(req.params.id, function(err, spot) {
       if(err) return res.status(500).json({ message: err });
       return res.status(200).json({ spot: spot });
     });
   }
 
-  function spotUpdate (req, res) {
+  function spotsUpdate (req, res) {
     Spot.findByIdAndUpdate(req.params.id, req.body.spot, { new: true}, function(err, spot) {
       if(err) return res.status(500).json({ message: err });
       return res.status(200).json({ spot: spot });
     });
   }
 
-  function spotDelete (req, res) {
+  function spotsDelete (req, res) {
     Spot.findByIdAndRemove(req.params.id, function(err) {
       if(err) return res.status(500).json({ message: err });
       return res.status(204).send();
@@ -30,6 +38,7 @@ function spotsIndex (req, res) {
 
   module.exports = {
     index: spotsIndex,
+    create: spotsCreate,
     show: spotsShow,
     update: spotsUpdate,
     delete: spotsDelete

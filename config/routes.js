@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var jwt = require('jsonwebtoken');
 var usersController = require('../controllers/users');
+var spotsController = require('../controllers/spots');
 
 
 var authenticationController = require('../controllers/authentications');
@@ -28,6 +29,8 @@ router.route('/users/:id')
 router.post('/register', authenticationController.register);
 router.post('/login', authenticationController.login);
 
+router.post('/addspot', spotsController.create);
 
+router.get('/spots', spotsController.index);
 
- module.exports = router;
+module.exports = router;

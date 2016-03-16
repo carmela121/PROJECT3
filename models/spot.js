@@ -9,4 +9,4 @@ var spotSchema = mongoose.Schema({
   openHours: String
 });
 
-module.exports = mongoose.model('Spot', userSchema);
+module.exports = mongoose.model('Spot', spotSchema);

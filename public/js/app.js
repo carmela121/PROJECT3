@@ -36,6 +36,7 @@ function showPage(){
     $('section').addClass('hidden');
 
     var sectionId = $(this).text().toLowerCase();
+    console.log(sectionId);
     if(sectionId === 'logout') {
       logout();
     } else {
@@ -65,6 +66,7 @@ function loggedInState(){
   $('#login, #register').addClass('hidden')
   $('#users').removeClass('hidden');
   getUsers();
+  getSpots();
 
 }
 
@@ -89,6 +91,25 @@ function authenticationSuccessful(data) {
 function setToken(token) {
   // set the token into localStorage,
   return localStorage.setItem('token', token);
+}
+
+function getSpots () {
+  event.preventDefault();
+  return ajaxRequest('GET', 'http://localhost:3000/api/spots', null, displaySpots);
+}
+
+function displaySpots(data){
+  //take user data and display all users (as li's)
+  $ul = $('ul.spots');
+    hideSpots($ul);
+    data.spots.forEach(function(spot) {
+      $ul.append('<li class="list-group-item">' + spot.name + spot.rating + '</li>');
+    });
+}
+
+function hideSpots(ul){
+  // remove all the users from the ul
+    ul.empty();
 }
 
 

@@ -15,7 +15,7 @@
 
   <header>
      <nav class="navbar navbar-default">
- 
+
          <!-- Brand and toggle get grouped for better mobile display -->
          <div class="navbar-header">
            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -31,6 +31,7 @@
            <li><a href="#" class="register-link logged-out">Register</a></li>
            <li><a href="#" class="login-link logged-out">Login</a></li>
            <li><a href="#" class="users-link logged-in">Users</a></li>
+           <li><a href="#" class="users-link logged-in">AddSpot</a></li>
            <li><a href="#" class="map-link logged-in">Map</a></li>
            <li><a href="#" class="logout-link logged-in">Logout</a></li>
         </ul>
@@ -47,24 +48,46 @@
     <% include partials/page/register %>
   </section>
 
+  <section id="addspot">
+    <h2>Add a spot</h2>
+    <% include partials/page/addSpot %>
+  </section>
+
+
   <section id="users">
    <h2>Users</h2>
    <ul class="list-group users"></ul>
   </section>
 
-  <!-- change this back to a section as currently a div and needs to be hidden using show page function on app.js -->
-  <section id="map">
-    <% include partials/page/map %>
-  </section>
+
+
+
+<div class="row">
+  <div class="col-xs-12 col-md-8">
+    <section id="map">
+      <% include partials/page/map %>
+    </section>
+  </div>
+
+  <div class="col-xs-6 col-md-4">
+    <section id="spots">
+     <h2>spots</h2>
+     <ul class="list-group spots"></ul>
+    </section>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
 
 </main>
-
-
-
 </body>
 
-<script type="text/javascript">
-
-
-</script>
 </html>
