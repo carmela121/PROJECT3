@@ -53,8 +53,10 @@ function submitForm(){
   event.preventDefault();
   var form = this;
   var method = $(this).attr('method');
-  var url = "http://localhost:3000/api" + $(this).attr('action');
+  var url = "/api" + $(this).attr('action');
   var data = $(this).serialize();
+  $('section').addClass('hidden');
+  $('#')
 
   form.reset();
   ajaxRequest(method, url, data, authenticationSuccessful);
@@ -96,7 +98,22 @@ function setToken(token) {
 
 function getSpots () {
   event.preventDefault();
-  return ajaxRequest('GET', 'http://localhost:3000/api/spots', null, displaySpots);
+  return ajaxRequest('GET', '/api/spots', null, displaySpots);
+}
+
+function deleteSpot(spot) {
+  event.preventDefault();
+  return ajaxRequest('DELETE', '/api/spots/' + spot._id);
+}
+
+function populateSpotForm(spot) {
+  event.preventDefault();
+  var $form = $('form.updateSpot');
+  $form.find('input').toArray().forEach(function(input) {
+    var $input = $(input);
+    var attrName = $input.attr('name').match(/spot\[(.+)\]/)[1];
+    $input.val(spot[attrName]);
+  });
 }
 
 function displaySpots(data){
@@ -104,10 +121,25 @@ function displaySpots(data){
   $ul = $('ul.spots');
     hideSpots($ul);
     data.spots.forEach(function(spot) {
-      $ul.append('<li class="list-group-item">' + spot.name + spot.rating + spot.vicinity + 
-      '<button type="submit" class="btn btn-default delete">Delete</button><button type="submit" class="update btn btn-default">Update</button></li>');
+      var $li = $('<li class="list-group-item">' + spot.name + spot.rating + spot.vicinity + 
+      '</li>');
+      var $update = $('<button type="submit" class="update btn btn-default">Update</button>');
+      var $delete = $('<button type="submit" class="btn btn-default delete">Delete</button>');
+
+      $delete.on('click', function() {
+        deleteSpot(spot);
+        $li.remove();
+      });
+      $update.on('click', function() {
+        populateSpotForm(spot);
+      });
+
+      $li.append($update);
+      $li.append($delete);
+      $ul.append($li);
     });
     $('.update').on('click', showUpdateForm);
+
 }
 
 function hideSpots(ul){
@@ -118,7 +150,7 @@ function hideSpots(ul){
 
 function getUsers(){
   event.preventDefault();
-    return ajaxRequest('GET', 'http://localhost:3000/api/users', null, displayUsers);
+    return ajaxRequest('GET', '/api/users', null, displayUsers);
 }
 
 function displayUsers(data){
@@ -156,6 +188,7 @@ function showUpdateForm(){
   console.log("trying to show");
   $('section').addClass('hidden');
   $('#updateSpot').removeClass('hidden');
+  console.log("clicked")
 }
 
 function ajaxRequest(method, url, data, callback) {
