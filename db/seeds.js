@@ -62,4 +62,3 @@ request(placesURL + "&type=park")
   .finally(function() {
     mongoose.connection.close();
   });
-

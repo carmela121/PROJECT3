@@ -103,7 +103,7 @@ function displaySpots(data){
   $ul = $('ul.spots');
     hideSpots($ul);
     data.spots.forEach(function(spot) {
-      $ul.append('<li class="list-group-item">' + spot.name + spot.rating + '</li>');
+      $ul.append('<li class="list-group-item">' + spot.name + spot.rating + spot.vicinity + '</li>');
     });
 }
 
@@ -290,26 +290,80 @@ function initialize () {
 
     // console.log(map);
 
-    var request = {
-      location:center,
-      radius:8047,
-      types:['parks']
-    }
+//     var request = {
+//       location:center,
+//       radius:8047,
+//       types:['parks']
+//     }
+//
+//     var service = new google.maps.places.PlacesService(map);
+//
+//       service.nearbySearch(request, callback);
+// }
+//
+//
+// function callback (results, status){
+//   if (status == google.maps.places.PlacesServiceStatus.OK){
+//     for(var i=0; i<results.length; i++){
+//       createMarker(results[i]);
+//       console.log(results[i].name);
+//     }
+//   }
+// }
 
-    var service = new google.maps.places.PlacesService(map);
 
-      service.nearbySearch(request, callback);
-}
+var currentInfoWindow;
+
+  // Makes a request to /cameras, and logs the data returned
+  $.get('/api/spots', function(data) {
+    // Create pin for each camera!
+    var spots = data.spots;
+
+    spots.forEach(function(spot, idx) {
+      setTimeout(function() {
+        var marker = new google.maps.Marker({
+          position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
+          map: map,
+          animation: google.maps.Animation.DROP
+          // icon: "/images/marker.png"
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+          position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
+          content: "<p>enter some text</p>"
+        });
+
+        marker.addListener('click', function() {
+          // Remove one window when another is opened
+          if(currentInfoWindow) currentInfoWindow.close();
+
+          currentInfoWindow = infoWindow;
+          infoWindow.open(map);
+        });
 
 
-function callback (results, status){
-  if (status == google.maps.places.PlacesServiceStatus.OK){
-    for(var i=0; i<results.length; i++){
-      createMarker(results[i]);
-      console.log(results[i].name);
-    }
-  }
-}
+      }, idx*25);
+
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function createMarker (place){
   var placeLoc = place.geometry.location;
@@ -320,4 +374,6 @@ function createMarker (place){
     position: placeLoc
     // icon: iconBase + 'pharmacy_plus.png'
   });
+}
+
 }
