@@ -24,12 +24,8 @@ function init () {
 function checkLoginState(){
   var token = getToken();
   if(token) {
-    $('.logged-out').addClass('hidden')
-    $('.logged-in').removeClass('hidden')
     return loggedInState();
   } else {
-    $('.logged-out').removeClass('hidden')
-    $('.logged-in').addClass('hidden')
     return loggedOutState();
   }
 }
@@ -70,6 +66,8 @@ function loggedInState(){
   // hide the login / register forms and links
   // show the users section and link
   // display the users
+  $('.logged-out').addClass('hidden');
+  $('.logged-in').removeClass('hidden');
   $('#login, #register, #landingPage').addClass('hidden')
   // $('#users').removeClass('hidden');
   $('#spots, #map').removeClass('hidden');
@@ -82,7 +80,9 @@ function loggedInState(){
 function loggedOutState(){
   // show the login / register links, and the login form
   // hide the users section and links
-  $('#login, #register, #users').addClass('hidden');
+  $('.logged-out').removeClass('hidden');
+  $('.logged-in').addClass('hidden');
+  $('section').addClass('hidden');
   $('#landingPage').removeClass('hidden');
 }
 
@@ -467,3 +467,4 @@ function initialize () {
   //   });
   // }
 }
+
