@@ -22,6 +22,7 @@ body {
     position: relative;
     display: block;
     padding: 20px 40px 20px 20px;
+    color: #3681A8;
 }
 
 
@@ -104,10 +105,19 @@ ul li {
   color:#3681A8;
 }
 
-#addspot-link{
+#addspotColor{
   color:#3681A8;
 }
 
-#logout-link{
+#logoutColor{
   color:#3681A8;
 }
+
+#registerColor{
+  color:#3681A8;
+}
+
+#loginColor{
+  color:#3681A8;
+}
+
