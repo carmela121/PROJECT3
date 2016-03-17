@@ -107,7 +107,6 @@ function deleteSpot(spot) {
   return ajaxRequest('DELETE', '/api/spots/' + spot._id);
 }
 
-
 function addressLookup(){
   var address = $('form.addSpot').find('[name="spot[name]"]').val() + ", UK";
   geocoder.geocode({ address: address }, function(results) {
@@ -158,6 +157,7 @@ function displaySpots(data){
     var $update = $('<button type="submit" class="update btn btn-default">Update</button>');
     var $delete = $('<button type="submit" class="btn btn-default delete">Delete</button>');
 
+<<<<<<< HEAD
     $delete.on('click', function() {
       deleteSpot(spot);
       $li.remove();
@@ -187,13 +187,14 @@ $('ul.spots li').on('click',function() {
   console.log(idx);
   var marker = markers[idx];
 
+  if(currentInfoWindow) currentInfoWindow.close();
+
   if(!marker.getMap()) {
     marker.setMap(map);
   } else {
     marker.setMap(null);
   }
 });
-
 
 function getUsers(){
   event.preventDefault();
