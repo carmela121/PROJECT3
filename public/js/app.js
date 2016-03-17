@@ -2,6 +2,7 @@ $(init);
 
 var markers = [];
 var map;
+var currentInfoWindow;
 
 
 function init () {
@@ -153,6 +154,8 @@ function displaySpots(data){
       var idx = $(this).index();
       console.log(idx);
       var marker = markers[idx];
+
+      if(currentInfoWindow) currentInfoWindow.close();
 
       if(!marker.getMap()) {
         marker.setMap(map);
@@ -373,7 +376,7 @@ function initialize () {
 //   }
 // }
 
-var currentInfoWindow;
+
 
   // Makes a request to /cameras, and logs the data returned
   $.get('/api/spots', function(data) {
@@ -389,7 +392,7 @@ var currentInfoWindow;
 
       var infoWindow = new google.maps.InfoWindow({
         position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
-        content: spot.name
+        content: '<div class="info-window"><h4>' + spot.name + '</h4><img src="https://s3-eu-west-1.amazonaws.com/carmen-bucket/project3+/' + spot.placeId + '.jpg" width="200"></div>'
       });
 
       marker.addListener('click', function() {
@@ -397,7 +400,7 @@ var currentInfoWindow;
         if(currentInfoWindow) currentInfoWindow.close();
 
         currentInfoWindow = infoWindow;
-        infoWindow.open(map);
+        infoWindow.open(map, marker);
       });
 
       markers.push(marker);
