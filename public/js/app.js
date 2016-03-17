@@ -56,7 +56,6 @@ function submitForm(){
   var url = "/api" + $(this).attr('action');
   var data = $(this).serialize();
   $('section').addClass('hidden');
-  $('#')
 
   form.reset();
   ajaxRequest(method, url, data, authenticationSuccessful);
@@ -157,7 +156,6 @@ function displaySpots(data){
     var $update = $('<button type="submit" class="update btn btn-default">Update</button>');
     var $delete = $('<button type="submit" class="btn btn-default delete">Delete</button>');
 
-<<<<<<< HEAD
     $delete.on('click', function() {
       deleteSpot(spot);
       $li.remove();
@@ -171,6 +169,20 @@ function displaySpots(data){
     $ul.append($li);
   });
 
+  $('ul.spots li').on('click',function() {
+    var idx = $(this).index();
+    console.log(idx);
+    var marker = markers[idx];
+
+    if(currentInfoWindow) currentInfoWindow.close();
+
+    if(!marker.getMap()) {
+      marker.setMap(map);
+    } else {
+      marker.setMap(null);
+    }
+  });
+
   $('.update').on('click', showUpdateForm);
 }
 
@@ -181,20 +193,6 @@ function updateSpot() {
   console.log(data);
   return ajaxRequest('PUT', url, data, checkLoginState);
 }
-
-$('ul.spots li').on('click',function() {
-  var idx = $(this).index();
-  console.log(idx);
-  var marker = markers[idx];
-
-  if(currentInfoWindow) currentInfoWindow.close();
-
-  if(!marker.getMap()) {
-    marker.setMap(map);
-  } else {
-    marker.setMap(null);
-  }
-});
 
 function getUsers(){
   event.preventDefault();
