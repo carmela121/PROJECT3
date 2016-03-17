@@ -27,14 +27,17 @@ router.route('/users/:id')
   .get(usersController.show);
 
 router.route('/spots/:id')
-  .get(spotsController.show)
-  .put(spotsController.update)
-  .delete(spotsController.delete);
+  .get(secureRoute, spotsController.show)
+  .put(secureRoute, spotsController.update)
+  .delete(secureRoute, spotsController.delete);
+
+router.route('/spots')
+  .get(secureRoute, spotsController.index)
+  .post(secureRoute, spotsController.create);
 
 router.post('/register', authenticationController.register);
 router.post('/login', authenticationController.login);
 
-router.post('/addspot', spotsController.create);
-router.get('/spots', spotsController.index);
+
 
 module.exports = router;
