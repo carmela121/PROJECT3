@@ -4,6 +4,7 @@ var markers = [];
 var map;
 var geocoder = new google.maps.Geocoder();
 var service;
+var currentInfoWindow;
 
 function init () {
   $('form:not(.updateSpot)').on('submit', submitForm);
@@ -55,6 +56,7 @@ function submitForm(){
   var url = "/api" + $(this).attr('action');
   var data = $(this).serialize();
   $('section').addClass('hidden');
+  $('#')
 
   form.reset();
   ajaxRequest(method, url, data, authenticationSuccessful);
@@ -105,6 +107,7 @@ function deleteSpot(spot) {
   return ajaxRequest('DELETE', '/api/spots/' + spot._id);
 }
 
+
 function addressLookup(){
   var address = $('form.addSpot').find('[name="spot[name]"]').val() + ", UK";
   geocoder.geocode({ address: address }, function(results) {
@@ -135,11 +138,7 @@ function populateAddSpotForm() {
 
 function populateSpotForm(spot) {
   event.preventDefault();
-  var $form   = $('form.updateSpot');
-
-  $form.attr('id', spot._id);
-  $form.on('submit', updateSpot);
-
+  var $form = $('form.updateSpot');
   $form.find('input').toArray().forEach(function(input) {
     var $input = $(input);
     var attrName = $input.attr('name').match(/spot\[(.+)\]/)[1];
@@ -194,6 +193,7 @@ $('ul.spots li').on('click',function() {
     marker.setMap(null);
   }
 });
+
 
 function getUsers(){
   event.preventDefault();
@@ -392,7 +392,7 @@ function initialize () {
 //   }
 // }
 
-var currentInfoWindow;
+
 
   // Makes a request to /cameras, and logs the data returned
   $.get('/api/spots', function(data) {
@@ -408,7 +408,7 @@ var currentInfoWindow;
 
       var infoWindow = new google.maps.InfoWindow({
         position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
-        content: spot.name
+        content: '<div class="info-window"><h4>' + spot.name + '</h4><img src="https://s3-eu-west-1.amazonaws.com/carmen-bucket/project3+/' + spot.placeId + '.jpg" width="200"></div>'
       });
 
       marker.addListener('click', function() {
@@ -416,7 +416,7 @@ var currentInfoWindow;
         if(currentInfoWindow) currentInfoWindow.close();
 
         currentInfoWindow = infoWindow;
-        infoWindow.open(map);
+        infoWindow.open(map, marker);
       });
 
       markers.push(marker);
