@@ -74,6 +74,8 @@ function loggedInState(){
   $('#login, #register').addClass('hidden')
   // $('#users').removeClass('hidden');
   $('#spots').removeClass('hidden');
+  $('.addSpot').addClass('hidden');
+  $('.updateSpot').addClass('hidden');
   // getUsers();
   getSpots();
 
@@ -328,11 +330,23 @@ function initialize () {
                 ]
             },
             {
+                "featureType": "poi.park",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "color": "#36B3A8"
+                    },
+                    {
+                        "visibility": "on"
+                    }
+                ]
+            },
+            {
                 "featureType": "water",
                 "elementType": "all",
                 "stylers": [
                     {
-                        "color": "#36b3a8"
+                        "color": "#36B3A8"
                     },
                     {
                         "visibility": "on"

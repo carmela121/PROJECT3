@@ -22,20 +22,24 @@ body {
 
 .navbar-default {
   /*background-color:#cccccc ;*/
-  border-bottom: 2px solid #31E981;
+  border-bottom: 4px solid #36B3A8;
 }
 
 
 .navbar-default .navbar-brand{
-  color:#31E981;
+  color:#36B3A8;
 }
 
 .spots {
-  border: 2px solid #31E981;
+  border: 2px solid #36B3A8;
 }
 
 
-
+.form-control:focus{
+    outline: none !important;
+    border:2px solid #36B3A8 !important;
+    box-shadow: 0 00px 5px #36B3A8 !important;
+}
 
 #login, #register {
   padding: 0px 400px;
