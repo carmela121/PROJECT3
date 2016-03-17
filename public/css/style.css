@@ -22,16 +22,16 @@ body {
 
 .navbar-default {
   /*background-color:#cccccc ;*/
-  border-bottom: 2px solid #008e1f;
+  border-bottom: 2px solid #31E981;
 }
 
 
 .navbar-default .navbar-brand{
-  color:#008e1f;
+  color:#31E981;
 }
 
 .spots {
-  border: 2px solid #008e1f;
+  border: 2px solid #31E981;
 }
 
 

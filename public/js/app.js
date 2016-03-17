@@ -1,29 +1,38 @@
 $(init);
 
+var markers = [];
+var map;
+var geocoder = new google.maps.Geocoder();
+var service;
+var currentInfoWindow;
+
 
 function init () {
-  $('form').on('submit', submitForm);
+  $('form:not(.updateSpot)').on('submit', submitForm);
+  $('form.addSpot :input').on('blur', addressLookup);
   $('#logoutBtn').on('click', logout);
-  console.log("js loaded okay");
   $('ul li a').on('click', showPage);
+
+  checkLoginState();
+
+
+  $('ul li a.addspot-link').on('click', populateAddSpotForm);
   checkLoginState();
 
   google.maps.event.addDomListener(window, 'load', initialize);
-
 }
 
 function checkLoginState(){
-
   var token = getToken();
-      if(token) {
-        $('.logged-out').addClass('hidden')
-        $('.logged-in').removeClass('hidden')
-        return loggedInState();
-      } else {
-        $('.logged-out').removeClass('hidden')
-        $('.logged-in').addClass('hidden')
-        return loggedOutState();
-      }
+  if(token) {
+    $('.logged-out').addClass('hidden')
+    $('.logged-in').removeClass('hidden')
+    return loggedInState();
+  } else {
+    $('.logged-out').removeClass('hidden')
+    $('.logged-in').addClass('hidden')
+    return loggedOutState();
+  }
 }
 
 function showPage(){
@@ -32,17 +41,14 @@ function showPage(){
   //display relevant section
 
   //hide all the section elements on the DOM using bootstraps hidden class.
-    $('section').addClass('hidden');
+  $('section').addClass('hidden');
 
-    var sectionId = $(this).text().toLowerCase();
-    // console.log(sectionId);
-    if(sectionId === 'logout') {
-      logout();
-    } else {
+  var sectionId = $(this).text().toLowerCase();
+  if(sectionId === 'logout') {
+    logout();
+  } else {
     $("#" + sectionId).removeClass('hidden')
-    // console.log(sectionId)
-
-    }
+  }
 }
 
 
@@ -97,12 +103,61 @@ function setToken(token) {
 
 function getSpots () {
   event.preventDefault();
+<<<<<<< HEAD
   return ajaxRequest('GET', 'http://localhost:3000/api/spots', null, displaySpots);
+=======
+  return ajaxRequest('GET', '/api/spots', null, displaySpots);
+}
+
+function deleteSpot(spot) {
+  event.preventDefault();
+  return ajaxRequest('DELETE', '/api/spots/' + spot._id);
+}
+
+
+function addressLookup(){
+  var address = $('form.addSpot').find('[name="spot[name]"]').val() + ", UK";
+  geocoder.geocode({ address: address }, function(results) {
+    if(results.length > 0) {
+      var spotName = results[0].formatted_address.split(', ')[0];
+      var location = results[0].geometry.location;
+      var $form = $('form.addSpot');
+      $form.find('[name="spot[lat]"]').val(location.lat());
+      $form.find('[name="spot[lng]"]').val(location.lng());
+    }
+  });
+}
+
+function populateAddSpotForm() {
+  event.preventDefault();
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    var pos = new google.maps.LatLng({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+    geocoder.geocode({ location: pos }, function(results) {
+      var spotName = results[0].formatted_address.split(', ')[0];
+      var location = results[0].geometry.location;
+      var $form = $('form.addSpot');
+      $form.find('[name="spot[name]"]').val(spotName);
+      $form.find('[name="spot[lat]"]').val(location.lat());
+      $form.find('[name="spot[lng]"]').val(location.lng());
+    });
+  });
+}
+
+function populateSpotForm(spot) {
+  event.preventDefault();
+  var $form = $('form.updateSpot');
+  $form.find('input').toArray().forEach(function(input) {
+    var $input = $(input);
+    var attrName = $input.attr('name').match(/spot\[(.+)\]/)[1];
+    $input.val(spot[attrName]);
+  });
+>>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
 }
 
 function displaySpots(data){
   //take user data and display all users (as li's)
   $ul = $('ul.spots');
+<<<<<<< HEAD
     hideSpots($ul);
     data.spots.forEach(function(spot) {
       $ul.append('<li class="list-group-item">' + spot.name + spot.rating + spot.vicinity + '</li>');
@@ -113,6 +168,51 @@ function hideSpots(ul){
   // remove all the users from the ul
     ul.empty();
 }
+=======
+  $ul.empty();
+
+  data.spots.forEach(function(spot, idx) {
+    var $li = $('<li class="list-group-item">' + spot.name + spot.rating + spot.vicinity +
+    '</li>');
+    var $update = $('<button type="submit" class="update btn btn-default">Update</button>');
+    var $delete = $('<button type="submit" class="btn btn-default delete">Delete</button>');
+
+    $delete.on('click', function() {
+      deleteSpot(spot);
+      $li.remove();
+    });
+    $update.on('click', function() {
+      populateSpotForm(spot);
+    });
+
+    $li.append($update);
+    $li.append($delete);
+    $ul.append($li);
+  });
+
+  $('.update').on('click', showUpdateForm);
+}
+
+function updateSpot() {
+  var id  = $(this).attr('id');
+  var url = '/api/spots/' + id;
+  var data = $(this).serialize();
+  console.log(data);
+  return ajaxRequest('PUT', url, data, checkLoginState);
+}
+
+$('ul.spots li').on('click',function() {
+  var idx = $(this).index();
+  console.log(idx);
+  var marker = markers[idx];
+
+  if(!marker.getMap()) {
+    marker.setMap(map);
+  } else {
+    marker.setMap(null);
+  }
+});
+>>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
 
 
 function getUsers(){
@@ -123,19 +223,18 @@ function getUsers(){
 function displayUsers(data){
   //take user data and display all users (as li's)
   $ul = $('ul.users');
-    hideUsers($ul);
-    data.users.forEach(function(user) {
-      $ul.append('<li class="list-group-item">' + user.username + user.email + '</li>');
-    });
+  $ul.emtpy();
+  data.users.forEach(function(user) {
+    $ul.append('<li class="list-group-item">' + user.username + user.email + '</li>');
+  });
 }
 
 function logout(){
   //remove the token
   //call the logged out state func
-
-    removeToken();
-    checkLoginState();
-    console.log("loggedout");
+  removeToken();
+  checkLoginState();
+  console.log("loggedout");
 
 }
 
@@ -144,10 +243,19 @@ function removeToken() {
   localStorage.clear()
 }
 
+<<<<<<< HEAD
 function hideUsers(ul){
 
   // remove all the users from the ul
     ul.empty();
+=======
+
+function showUpdateForm(){
+  console.log("trying to show");
+  $('section').addClass('hidden');
+  $('#updateSpot').removeClass('hidden');
+  console.log("clicked");
+>>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
 }
 
 function ajaxRequest(method, url, data, callback) {
@@ -179,90 +287,95 @@ function initialize () {
         zoom: 15,
         // scrollwheel: false
 
-        styles:
-[
-    {
-        "featureType": "administrative",
-        "elementType": "labels.text.fill",
-        "stylers": [
+        styles:[
             {
-                "color": "#444444"
-            }
-        ]
-    },
-    {
-        "featureType": "landscape",
-        "elementType": "all",
-        "stylers": [
-            {
-                "color": "#f2f2f2"
-            }
-        ]
-    },
-    {
-        "featureType": "poi",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
-    },
-    {
-        "featureType": "road",
-        "elementType": "all",
-        "stylers": [
-            {
-                "saturation": -100
+                "featureType": "administrative",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#444444"
+                    }
+                ]
             },
             {
-                "lightness": 45
-            }
-        ]
-    },
-    {
-        "featureType": "road.highway",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "road.arterial",
-        "elementType": "labels.icon",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
-    },
-    {
-        "featureType": "transit",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
-    },
-    {
-        "featureType": "water",
-        "elementType": "all",
-        "stylers": [
-            {
-                "color": "#36b3a8"
+                "featureType": "landscape",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "color": "#f2f2f2"
+                    }
+                ]
             },
             {
-                "visibility": "on"
+                "featureType": "poi",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "saturation": -100
+                    },
+                    {
+                        "lightness": 45
+                    }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "visibility": "simplified"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.arterial",
+                "elementType": "labels.icon",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "transit",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "all",
+                "stylers": [
+                    {
+                        "color": "#36b3a8"
+                    },
+                    {
+                        "visibility": "on"
+                    }
+                ]
             }
         ]
-    }
-]
       });
 
+<<<<<<< HEAD
       var geocoder = new google.maps.Geocoder();
+=======
+      service = new google.maps.places.PlacesService(map);
+
+      // var geocoder = new google.maps.Geocoder();
+>>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
 
       geocoder.geocode({ address: "The Emirates Stadium, London, UK" }, function(results) {
 
@@ -272,22 +385,22 @@ function initialize () {
         });
       });
 
-      navigator.geolocation.getCurrentPosition(function(pos) {
+      // navigator.geolocation.getCurrentPosition(function(pos) {
 
-        var pos = new google.maps.LatLng({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        console.log(pos.lat(), pos.lng());
-        var currentMarker = new google.maps.Marker({
-          map:map,
-          position: pos,
-          draggable: true
-        });
+      //   var pos = new google.maps.LatLng({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      //   console.log(pos.lat(), pos.lng());
+      //   var currentMarker = new google.maps.Marker({
+      //     map:map,
+      //     position: pos,
+      //     draggable: true
+      //   });
 
-        currentMarker.addListener('dragend', function() {
-          geocoder.geocode({ location: currentMarker.getPosition() }, function(results) {
-            console.log(results[0].formatted_address);
-          });
-        });
-      });
+      //   currentMarker.addListener('dragend', function() {
+      //     geocoder.geocode({ location: currentMarker.getPosition() }, function(results) {
+      //       console.log(results[0].formatted_address);
+      //     });
+      //   });
+      // });
 
 
     // console.log(map);
@@ -314,7 +427,10 @@ function initialize () {
 // }
 
 
+<<<<<<< HEAD
 var currentInfoWindow;
+=======
+>>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
 
   // Makes a request to /cameras, and logs the data returned
   $.get('/api/spots', function(data) {
@@ -330,21 +446,34 @@ var currentInfoWindow;
           // icon: "/images/marker.png"
         });
 
+<<<<<<< HEAD
         var infoWindow = new google.maps.InfoWindow({
           position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
           content: "<p>enter some text</p>"
         });
+=======
+      var infoWindow = new google.maps.InfoWindow({
+        position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
+        content: '<div class="info-window"><h4>' + spot.name + '</h4><img src="https://s3-eu-west-1.amazonaws.com/carmen-bucket/project3+/' + spot.placeId + '.jpg" width="200"></div>'
+      });
+>>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
 
         marker.addListener('click', function() {
           // Remove one window when another is opened
           if(currentInfoWindow) currentInfoWindow.close();
 
+<<<<<<< HEAD
           currentInfoWindow = infoWindow;
           infoWindow.open(map);
         });
 
 
       }, idx*25);
+=======
+        currentInfoWindow = infoWindow;
+        infoWindow.open(map, marker);
+      });
+>>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
 
     });
   });
