@@ -6,11 +6,15 @@ body {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    font-family: 'Exo 2', sans-serif;
+    font-family: 'Merriweather Sans', sans-serif;
+    /*font-family: 'Comfortaa', cursive;*/
 }
 
 #map{
   height:500px;
   width: 700px;
+  box-shadow: 0px 0px 5px #36B3A8 !important;
 }
 
 .nav>li>a {
@@ -28,10 +32,14 @@ body {
 
 .navbar-default .navbar-brand{
   color:#36B3A8;
+  font-size: 34px;
+  margin-left: 30px;
+  margin-top: 8px;
 }
 
 .spots {
   border: 2px solid #36B3A8;
+  box-shadow: 0 00px 5px #36B3A8 !important;
 }
 
 
@@ -43,4 +51,26 @@ body {
 
 #login, #register {
   padding: 0px 400px;
+}
+
+
+ul.spots{
+  height:500px;
+  width: auto;
+  overflow: auto;
+}
+
+#spotTitle {
+  text-align: center;
+}
+
+
+
+#brand{
+  font-weight: bold;
+}
+
+#space{
+  font-weight:normal;
+  color:#3681A8;
 }

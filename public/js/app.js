@@ -12,11 +12,13 @@ function init () {
   $('form.addSpot :input').on('blur', addressLookup);
   $('#logoutBtn').on('click', logout);
   $('ul li a').on('click', showPage);
+  $('#addspot').addClass('hidden');
+  $('.updateSpot').addClass('hidden');
 
   checkLoginState();
 
 
-  $('ul li a.addspot-link').on('click', populateAddSpotForm);
+  $('ul li a#addspot-link').on('click', populateAddSpotForm);
   checkLoginState();
 
   google.maps.event.addDomListener(window, 'load', initialize);
@@ -46,7 +48,7 @@ function showPage(){
   var sectionId = $(this).text().toLowerCase();
   if(sectionId === 'logout') {
     logout();
-  } else {
+  }  else {
     $("#" + sectionId).removeClass('hidden')
   }
 }
@@ -74,8 +76,7 @@ function loggedInState(){
   $('#login, #register').addClass('hidden')
   // $('#users').removeClass('hidden');
   $('#spots').removeClass('hidden');
-  $('.addSpot').addClass('hidden');
-  $('.updateSpot').addClass('hidden');
+
   // getUsers();
   getSpots();
 
@@ -168,6 +169,7 @@ function displaySpots(data){
       $li.remove();
     });
     $update.on('click', function() {
+      $('.updateSpot').removeClass('hidden');
       populateSpotForm(spot);
     });
 

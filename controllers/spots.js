@@ -4,7 +4,7 @@ function spotsIndex (req, res) {
   Spot.find(function(err, spots) {
     if(err) return res.status(500).json({ message: err });
     return res.status(200).json({ spots: spots });
-  }).limit(8);
+  });
 }
 
 function spotsCreate(req, res){
