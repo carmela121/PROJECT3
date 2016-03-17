@@ -14,6 +14,7 @@ body {
 #map{
   height:500px;
   width: 700px;
+  border: 1px solid #36B3A8;
   box-shadow: 0px 0px 5px #36B3A8 !important;
 }
 
@@ -38,8 +39,8 @@ body {
 }
 
 .spots {
-  border: 2px solid #36B3A8;
-  box-shadow: 0 00px 5px #36B3A8 !important;
+  border: 1px solid #36B3A8;
+  box-shadow: 0 00px 2px #36B3A8 !important;
 }
 
 
@@ -64,6 +65,9 @@ ul.spots{
   text-align: center;
 }
 
+ul li {
+  text-align:center;
+}
 
 
 #brand{
@@ -73,4 +77,17 @@ ul.spots{
 #space{
   font-weight:normal;
   color:#3681A8;
+}
+
+#spotName{
+  font-size: 14px;
+  font-weight:bold;
+}
+
+.btn-default:hover{
+  background-color: #36B3A8;
+}
+.jumbotron{
+  background: url(../images/park.jpg) no-repeat;
+  opacity: 0.6;
 }
