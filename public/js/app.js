@@ -17,11 +17,8 @@ function init () {
 
   checkLoginState();
 
-
   $('ul li a#addspot-link').on('click', populateAddSpotForm);
   checkLoginState();
-
-  google.maps.event.addDomListener(window, 'load', initialize);
 }
 
 function checkLoginState(){
@@ -73,10 +70,10 @@ function loggedInState(){
   // hide the login / register forms and links
   // show the users section and link
   // display the users
-  $('#login, #register').addClass('hidden')
+  $('#login, #register, #landingPage').addClass('hidden')
   // $('#users').removeClass('hidden');
-  $('#spots').removeClass('hidden');
-
+  $('#spots, #map').removeClass('hidden');
+  initialize();
   // getUsers();
   getSpots();
 
@@ -85,7 +82,8 @@ function loggedInState(){
 function loggedOutState(){
   // show the login / register links, and the login form
   // hide the users section and links
-  $('#login, #register, #users').addClass('hidden')
+  $('#login, #register, #users').addClass('hidden');
+  $('#landingPage').removeClass('hidden');
 }
 
 function getToken() {
@@ -159,7 +157,7 @@ function displaySpots(data){
   $ul.empty();
 
   data.spots.forEach(function(spot, idx) {
-    var $li = $('<li class="list-group-item">' + '<span id ="spotName">' + spot.name + '</span>' + '<div>' + 'Rating: ' + spot.rating + '</div>' +
+    var $li = $('<li class="list-group-item">' + '<span id ="spotName">' + spot.name + '</span>' + '<div class="rating"></div>' +
     '</li>');
     var $update = $('<button type="submit" class="update btn btn-default">Update</button>');
     var $delete = $('<button type="submit" class="btn btn-default delete">Delete</button>');
@@ -176,6 +174,22 @@ function displaySpots(data){
     $li.append($update);
     $li.append($delete);
     $ul.append($li);
+
+    var totalHalfStars = Math.round(spot.rating / 0.5);
+    var wholeStars = Math.floor(totalHalfStars / 2);
+    var halfStars = totalHalfStars % 2;
+    var $container = $li.find('.rating');
+
+    while(wholeStars) {
+      // add a whole star to the DOM
+      $container.append('<i class="fa fa-star"></i>');
+      wholeStars--;
+    }
+    while(halfStars) {
+      // add half star to the DOM
+      $container.append('<i class="fa fa-star-half"></i>');
+      halfStars--;
+    }
   });
 
   $('ul.spots li').on('click',function() {
@@ -187,6 +201,7 @@ function displaySpots(data){
 
     if(!marker.getMap()) {
       marker.setMap(map);
+      map.panTo(marker.position);
     } else {
       marker.setMap(null);
     }
@@ -255,110 +270,139 @@ function ajaxRequest(method, url, data, callback) {
 
 }
 
+function generateMarkers(data) {
+  // Create pin for each camera!
+  var spots = data.spots;
+
+  spots.forEach(function(spot, idx) {
+    var marker = new google.maps.Marker({
+      position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
+      // icon: "/images/marker.png"
+    });
+
+    var infoWindow = new google.maps.InfoWindow({
+      position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
+      content: '<div class="info-window"><h4>' + spot.name + '</h4><img src="https://s3-eu-west-1.amazonaws.com/carmen-bucket/project3+/' + spot.placeId + '.jpg" width="200"></div>'
+    });
+
+    marker.addListener('click', function() {
+      // Remove one window when another is opened
+      if(currentInfoWindow) currentInfoWindow.close();
+
+      currentInfoWindow = infoWindow;
+      infoWindow.open(map, marker);
+    });
+
+    markers.push(marker);
+
+  });
+};
+
 function initialize () {
 
-    var center = new google.maps.LatLng(51.5152,-0.0722);
+  var center = new google.maps.LatLng(51.5152,-0.0722);
 
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: center,
-        zoom: 15,
-        // scrollwheel: false
+  map = new google.maps.Map(document.getElementById('map'), {
+      center: center,
+      zoom: 15,
+      // scrollwheel: false
 
-        styles:[
-            {
-                "featureType": "administrative",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                    {
-                        "color": "#444444"
-                    }
-                ]
-            },
-            {
-                "featureType": "landscape",
-                "elementType": "all",
-                "stylers": [
-                    {
-                        "color": "#f2f2f2"
-                    }
-                ]
-            },
-            {
-                "featureType": "poi",
-                "elementType": "all",
-                "stylers": [
-                    {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "road",
-                "elementType": "all",
-                "stylers": [
-                    {
-                        "saturation": -100
-                    },
-                    {
-                        "lightness": 45
-                    }
-                ]
-            },
-            {
-                "featureType": "road.highway",
-                "elementType": "all",
-                "stylers": [
-                    {
-                        "visibility": "simplified"
-                    }
-                ]
-            },
-            {
-                "featureType": "road.arterial",
-                "elementType": "labels.icon",
-                "stylers": [
-                    {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "transit",
-                "elementType": "all",
-                "stylers": [
-                    {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "poi.park",
-                "elementType": "all",
-                "stylers": [
-                    {
-                        "color": "#36B3A8"
-                    },
-                    {
-                        "visibility": "on"
-                    }
-                ]
-            },
-            {
-                "featureType": "water",
-                "elementType": "all",
-                "stylers": [
-                    {
-                        "color": "#36B3A8"
-                    },
-                    {
-                        "visibility": "on"
-                    }
-                ]
-            }
-        ]
-      });
+      styles:[{
+          "featureType": "administrative",
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#444444" }]
+        }, {
+          "featureType": "landscape",
+          "elementType": "all",
+          "stylers": [{ "color": "#f2f2f2" }]
+        }, {
+            "featureType": "poi",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "road",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "saturation": -100
+                },
+                {
+                    "lightness": 45
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "visibility": "simplified"
+                }
+            ]
+        },
+        {
+            "featureType": "road.arterial",
+            "elementType": "labels.icon",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "transit",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "poi.park",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "color": "#36B3A8"
+                },
+                {
+                    "visibility": "on"
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "color": "#36B3A8"
+                },
+                {
+                    "visibility": "on"
+                }
+            ]
+        }
+    ]
+  });
 
-      service = new google.maps.places.PlacesService(map);
+  service = new google.maps.places.PlacesService(map);
+
+  ajaxRequest("GET", '/api/spots', null, generateMarkers);
+
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    var pos = new google.maps.LatLng({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+    map.panTo(pos);
+
+    new google.maps.Marker({
+      map: map,
+      position: pos
+    });
+  });
 
       // geocoder.geocode({ address: "The Emirates Stadium, London, UK" }, function(results) {
       //
@@ -410,33 +454,7 @@ function initialize () {
 // }
 
   // Makes a request to /cameras, and logs the data returned
-  $.get('/api/spots', function(data) {
-    // Create pin for each camera!
-    var spots = data.spots;
 
-    spots.forEach(function(spot, idx) {
-      var marker = new google.maps.Marker({
-        position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
-        // icon: "/images/marker.png"
-      });
-
-      var infoWindow = new google.maps.InfoWindow({
-        position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
-        content: '<div class="info-window"><h4>' + spot.name + '</h4><img src="https://s3-eu-west-1.amazonaws.com/carmen-bucket/project3+/' + spot.placeId + '.jpg" width="200"></div>'
-      });
-
-      marker.addListener('click', function() {
-        // Remove one window when another is opened
-        if(currentInfoWindow) currentInfoWindow.close();
-
-        currentInfoWindow = infoWindow;
-        infoWindow.open(map, marker);
-      });
-
-      markers.push(marker);
-
-    });
-  });
 
   // function createMarker (place){
   //   var placeLoc = place.geometry.location;

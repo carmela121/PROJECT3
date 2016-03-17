@@ -6,10 +6,12 @@ function register(req, res){
   User.create(req.body.user, function(err,user){
     if (err) {
       if(err.code && (err.code === 11000 || err.code === 11001)){
-        var attribute = err.message.match(/\$[a-z]+)_/)[1];
+        var attribute = err.message.match(/\$?[a-z]+)_[0-9]/)[1];
         err = "An account with that " + attribute + " already exists ";
+      } else {
+        err = err.toString();
       }
-      return res.status(400).json({message: err.toString()}
+      return res.status(400).json({message: err }
         );
       }
       var token = jwt.sign(user, secret, "24h");
@@ -20,17 +22,12 @@ function register(req, res){
 
 
 function login(req, res) {
-  User.findOne({email: req.body.email}, function (err, user)
-  {
+  User.findOne({ email: req.body.email }, function (err, user) {
     if(err) return res.send(500).json({message: err});
-    if(!user || !user.validatePassword(req.body.password))
-      return res.status(401).json({message: "Unauthorized"}
-
-        );
+    if(!user || !user.validatePassword(req.body.password)) return res.status(401).json({ message: "Unauthorized" });
 
     var token = jwt.sign(user, secret, "24h");
-    return res.status(200).json({message: "Login successful", user: user, token: token});
-
+    return res.status(200).json({ message: "Login successful", user: user, token: token });
   });
 }
 
