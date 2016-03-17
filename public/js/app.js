@@ -61,6 +61,7 @@ function submitForm(){
   var method = $(this).attr('method');
   var url = "http://localhost:3000/api" + $(this).attr('action');
   var data = $(this).serialize();
+  $('section').addClass('hidden');
 
   form.reset();
   ajaxRequest(method, url, data, authenticationSuccessful);
@@ -103,9 +104,6 @@ function setToken(token) {
 
 function getSpots () {
   event.preventDefault();
-<<<<<<< HEAD
-  return ajaxRequest('GET', 'http://localhost:3000/api/spots', null, displaySpots);
-=======
   return ajaxRequest('GET', '/api/spots', null, displaySpots);
 }
 
@@ -113,7 +111,6 @@ function deleteSpot(spot) {
   event.preventDefault();
   return ajaxRequest('DELETE', '/api/spots/' + spot._id);
 }
-
 
 function addressLookup(){
   var address = $('form.addSpot').find('[name="spot[name]"]').val() + ", UK";
@@ -151,24 +148,11 @@ function populateSpotForm(spot) {
     var attrName = $input.attr('name').match(/spot\[(.+)\]/)[1];
     $input.val(spot[attrName]);
   });
->>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
 }
 
 function displaySpots(data){
   //take user data and display all users (as li's)
   $ul = $('ul.spots');
-<<<<<<< HEAD
-    hideSpots($ul);
-    data.spots.forEach(function(spot) {
-      $ul.append('<li class="list-group-item">' + spot.name + spot.rating + spot.vicinity + '</li>');
-    });
-}
-
-function hideSpots(ul){
-  // remove all the users from the ul
-    ul.empty();
-}
-=======
   $ul.empty();
 
   data.spots.forEach(function(spot, idx) {
@@ -190,6 +174,20 @@ function hideSpots(ul){
     $ul.append($li);
   });
 
+  $('ul.spots li').on('click',function() {
+    var idx = $(this).index();
+    console.log(idx);
+    var marker = markers[idx];
+
+    if(currentInfoWindow) currentInfoWindow.close();
+
+    if(!marker.getMap()) {
+      marker.setMap(map);
+    } else {
+      marker.setMap(null);
+    }
+  });
+
   $('.update').on('click', showUpdateForm);
 }
 
@@ -201,23 +199,9 @@ function updateSpot() {
   return ajaxRequest('PUT', url, data, checkLoginState);
 }
 
-$('ul.spots li').on('click',function() {
-  var idx = $(this).index();
-  console.log(idx);
-  var marker = markers[idx];
-
-  if(!marker.getMap()) {
-    marker.setMap(map);
-  } else {
-    marker.setMap(null);
-  }
-});
->>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
-
-
 function getUsers(){
   event.preventDefault();
-    return ajaxRequest('GET', 'http://localhost:3000/api/users', null, displayUsers);
+  return ajaxRequest('GET', 'http://localhost:3000/api/users', null, displayUsers);
 }
 
 function displayUsers(data){
@@ -243,19 +227,11 @@ function removeToken() {
   localStorage.clear()
 }
 
-<<<<<<< HEAD
-function hideUsers(ul){
-
-  // remove all the users from the ul
-    ul.empty();
-=======
-
 function showUpdateForm(){
   console.log("trying to show");
   $('section').addClass('hidden');
   $('#updateSpot').removeClass('hidden');
   console.log("clicked");
->>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
 }
 
 function ajaxRequest(method, url, data, callback) {
@@ -274,9 +250,6 @@ function ajaxRequest(method, url, data, callback) {
   });
 
 }
-
-
-var map;
 
 function initialize () {
 
@@ -369,21 +342,15 @@ function initialize () {
         ]
       });
 
-<<<<<<< HEAD
-      var geocoder = new google.maps.Geocoder();
-=======
       service = new google.maps.places.PlacesService(map);
 
-      // var geocoder = new google.maps.Geocoder();
->>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
-
-      geocoder.geocode({ address: "The Emirates Stadium, London, UK" }, function(results) {
-
-        var sillyMarker = new google.maps.Marker({
-          map:map,
-          position: results[0].geometry.location,
-        });
-      });
+      // geocoder.geocode({ address: "The Emirates Stadium, London, UK" }, function(results) {
+      //
+      //   var sillyMarker = new google.maps.Marker({
+      //     map:map,
+      //     position: results[0].geometry.location,
+      //   });
+      // });
 
       // navigator.geolocation.getCurrentPosition(function(pos) {
 
@@ -426,85 +393,43 @@ function initialize () {
 //   }
 // }
 
-
-<<<<<<< HEAD
-var currentInfoWindow;
-=======
->>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
-
   // Makes a request to /cameras, and logs the data returned
   $.get('/api/spots', function(data) {
     // Create pin for each camera!
     var spots = data.spots;
 
     spots.forEach(function(spot, idx) {
-      setTimeout(function() {
-        var marker = new google.maps.Marker({
-          position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
-          map: map,
-          animation: google.maps.Animation.DROP
-          // icon: "/images/marker.png"
-        });
+      var marker = new google.maps.Marker({
+        position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
+        // icon: "/images/marker.png"
+      });
 
-<<<<<<< HEAD
-        var infoWindow = new google.maps.InfoWindow({
-          position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
-          content: "<p>enter some text</p>"
-        });
-=======
       var infoWindow = new google.maps.InfoWindow({
         position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
         content: '<div class="info-window"><h4>' + spot.name + '</h4><img src="https://s3-eu-west-1.amazonaws.com/carmen-bucket/project3+/' + spot.placeId + '.jpg" width="200"></div>'
       });
->>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
 
-        marker.addListener('click', function() {
-          // Remove one window when another is opened
-          if(currentInfoWindow) currentInfoWindow.close();
+      marker.addListener('click', function() {
+        // Remove one window when another is opened
+        if(currentInfoWindow) currentInfoWindow.close();
 
-<<<<<<< HEAD
-          currentInfoWindow = infoWindow;
-          infoWindow.open(map);
-        });
-
-
-      }, idx*25);
-=======
         currentInfoWindow = infoWindow;
         infoWindow.open(map, marker);
       });
->>>>>>> 15170c6b4252031313929935914c5c23ff5c7e08
+
+      markers.push(marker);
 
     });
   });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function createMarker (place){
-  var placeLoc = place.geometry.location;
-  // console.log(placeLoc);
-  var iconBase = "https://maps.google.com/mapfiles/kml/shapes/";
-  var marker = new google.maps.Marker({
-    map:map,
-    position: placeLoc
-    // icon: iconBase + 'pharmacy_plus.png'
-  });
-}
-
+  // function createMarker (place){
+  //   var placeLoc = place.geometry.location;
+  //   // console.log(placeLoc);
+  //   var iconBase = "https://maps.google.com/mapfiles/kml/shapes/";
+  //   var marker = new google.maps.Marker({
+  //     map:map,
+  //     position: placeLoc
+  //     // icon: iconBase + 'pharmacy_plus.png'
+  //   });
+  // }
 }
