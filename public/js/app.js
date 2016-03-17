@@ -158,7 +158,7 @@ function displaySpots(data){
   $ul.empty();
 
   data.spots.forEach(function(spot, idx) {
-    var $li = $('<li class="list-group-item">' + spot.name + spot.rating + spot.vicinity +
+    var $li = $('<li class="list-group-item">' + spot.name + '<div>' + 'Rating: ' + spot.rating + '</div>' +
     '</li>');
     var $update = $('<button type="submit" class="update btn btn-default">Update</button>');
     var $delete = $('<button type="submit" class="btn btn-default delete">Delete</button>');
