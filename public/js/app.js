@@ -54,7 +54,7 @@ function submitForm(){
   event.preventDefault();
   var form = this;
   var method = $(this).attr('method');
-  var url = "http://localhost:3000/api" + $(this).attr('action');
+  var url = "/api" + $(this).attr('action');
   var data = $(this).serialize();
   $('section').addClass('hidden');
 
@@ -220,7 +220,7 @@ function updateSpot() {
 
 function getUsers(){
   event.preventDefault();
-  return ajaxRequest('GET', 'http://localhost:3000/api/users', null, displayUsers);
+  return ajaxRequest('GET', '/api/users', null, displayUsers);
 }
 
 function displayUsers(data){
